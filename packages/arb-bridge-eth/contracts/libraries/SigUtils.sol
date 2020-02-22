@@ -32,14 +32,9 @@ library SigUtils {
         //   {bytes32 r}{bytes32 s}{uint8 v}
         // Compact means, uint8 is not padded to 32 bytes.
         assembly { // solium-disable-line security/no-inline-assembly
-            r := mload(add(_signatures, add(32, offset)))
-            s := mload(add(_signatures, add(64, offset)))
-            // Here we are loading the last 32 bytes, including 31 bytes
-            // of 's'. There is no 'mload8' to do this.
-            //
-            // 'byte' is not working due to the Solidity parser, so lets
-            // use the second best option, 'and'
-            v := and(mload(add(_signatures, add(65, offset))), 0xff)
+            r := mload(add(_signatures, add(0x20, offset)))
+            s := mload(add(_signatures, add(0x40, offset)))
+            v := byte(0, mload(add(_signatures, add(0x60, offset))))
         }
 
         if (v < 27) {
@@ -114,7 +109,7 @@ library SigUtils {
     function recoverAddress(
         bytes32 _messageHash,
         bytes memory _signature,
-        uint256 _offset
+        uint256 _pos
     )
         internal
         pure
@@ -125,7 +120,7 @@ library SigUtils {
         bytes32 s;
         bytes memory prefix = "\x19Ethereum Signed Message:\n32";
         bytes32 prefixedHash = keccak256(abi.encodePacked(prefix, _messageHash));
-        (v, r, s) = parseSignature(_signature, _offset);
+        (v, r, s) = parseSignature(_signature, _pos);
         return ecrecover(
             prefixedHash,
             v,

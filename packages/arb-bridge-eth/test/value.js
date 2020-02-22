@@ -18,8 +18,8 @@ const ValueTester = artifacts.require("ValueTester");
 const ArbValue = require("arb-provider-ethers").ArbValue;
 const test_cases = require("./test_cases.json");
 
-contract("ArbRollup", accounts => {
-  it("should initialize", async () => {
+contract("Value", accounts => {
+  it("should deserialize hashed", async () => {
     let value_tester = await ValueTester.new();
     let val = new ArbValue.IntValue(100);
     let res = await value_tester.deserializeHashed(ArbValue.marshal(val), 0);

@@ -260,7 +260,7 @@ contract GlobalInbox is GlobalEthWallet, GlobalFTWallet, GlobalNFTWallet, IGloba
                 _values[i],
                 messageData,
                 _signatures,
-                i * 65
+                i
             );
 
             inboxVal = Protocol.addMessageToInbox(inboxVal, messageHash);
@@ -277,7 +277,7 @@ contract GlobalInbox is GlobalEthWallet, GlobalFTWallet, GlobalNFTWallet, IGloba
         uint256 _value,
         bytes memory _messageData,
         bytes memory _signatures,
-        uint256 signatureOffset
+        uint256 sigNum
     )
         private
         returns(bytes32)
@@ -293,7 +293,7 @@ contract GlobalInbox is GlobalEthWallet, GlobalFTWallet, GlobalNFTWallet, IGloba
                 )
             ),
             _signatures,
-            signatureOffset
+            sigNum
         );
 
         bytes32 messageHash = Messages.transactionHash(
